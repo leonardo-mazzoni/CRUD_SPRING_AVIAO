@@ -13,7 +13,7 @@ public class AviaoService {
         this.repository = repository;
     }
 
-    public void SalvarAviao(Aviao aviao){
+    public void salvarAviao(Aviao aviao){
         repository.saveAndFlush(aviao);
     }
 
@@ -21,5 +21,27 @@ public class AviaoService {
         return repository.findByFabricante(fabricante).orElseThrow(
                 () -> new RuntimeException("Fabricante não encontrado")
         );
+    }
+
+    public void deletarAviaoPorNome(String nome){
+
+        repository.deleteByNome(nome);
+    }
+
+    public void atualizarAviaoPorId(Integer id,Aviao aviao){
+        Aviao aviaoEntity = repository.findById(id).orElseThrow(()->
+                new RuntimeException("Aviao não encontrado!"));
+        Aviao aviaoAtualizado = Aviao.builder()
+            .nome(aviao.getNome() != null ? aviao.getNome() : aviaoEntity.getNome())
+            .fabricante(aviao.getFabricante() != null ? aviao.getFabricante() : aviaoEntity.getFabricante())
+            .modelo(aviao.getModelo() != null ? aviao.getModelo() : aviaoEntity.getModelo())
+            .autonomia(aviao.getAutonomia() != null ? aviao.getAutonomia() : aviaoEntity.getAutonomia())
+            .capacidade(aviao.getCapacidade() != null ? aviao.getCapacidade() : aviaoEntity.getCapacidade())
+            .id(aviaoEntity.getId())
+            .build();
+
+        repository.saveAndFlush(aviaoAtualizado);
+
+
     }
 }
