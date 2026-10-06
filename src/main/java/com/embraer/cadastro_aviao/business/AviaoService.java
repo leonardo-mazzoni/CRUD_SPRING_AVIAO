@@ -17,9 +17,9 @@ public class AviaoService {
         repository.saveAndFlush(aviao);
     }
 
-    public Aviao buscarAviaoPorFabricante(String fabricante){
-        return repository.findByFabricante(fabricante).orElseThrow(
-                () -> new RuntimeException("Fabricante não encontrado")
+    public Aviao buscarAviaoPorNome(String nome){
+        return repository.findByNome(nome).orElseThrow(
+                () -> new RuntimeException("Nome não encontrado")
         );
     }
 
