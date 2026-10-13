@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 //perceba! sao bibliotecas diferentes
 @RestController
-@RequestMapping("/Aviao")
+@RequestMapping("/aviao")
 @RequiredArgsConstructor
 public class AviaoController {
 
