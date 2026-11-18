@@ -6,9 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 //perceba! sao bibliotecas diferentes
 @RestController
 @RequestMapping("/aviao")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class AviaoController {
 
@@ -28,6 +31,11 @@ public class AviaoController {
     @GetMapping
     public ResponseEntity<Aviao> buscarAviaoPorNome(@RequestParam String nome){
         return ResponseEntity.ok(aviaoService.buscarAviaoPorNome(nome));
+    }
+
+    @GetMapping("/todos")
+    public ResponseEntity<List<Aviao>> listarTodos(){
+        return ResponseEntity.ok(aviaoService.listarTodos());
     }
 
     @DeleteMapping

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentação e Guia de Apresentação Individual — CRUD Avião</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 16mm 15mm 16mm 15mm;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 10.2pt;
+            line-height: 1.5;
+            color: #1e293b;
+            background: #ffffff;
+        }
+
+        .doc-header {
+            background: linear-gradient(135deg, #071b2e 0%, #0a2540 65%, #13385c 100%);
+            color: #ffffff;
+            padding: 18px 22px;
+            border-radius: 8px;
+            border-bottom: 4px solid #0ea5e9;
+            margin-bottom: 18px;
+        }
+
+        .doc-header h1 {
+            font-size: 16pt;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .doc-header .sub {
+            font-size: 9.8pt;
+            color: #bae6fd;
+            margin-bottom: 10px;
+        }
+
+        .meta-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            font-size: 8.8pt;
+            color: #e2e8f0;
+            border-top: 1px solid rgba(255, 255, 255, 0.18);
+            padding-top: 8px;
+        }
+
+        h2 {
+            font-size: 12.5pt;
+            color: #0a2540;
+            border-bottom: 2px solid #0284c7;
+            padding-bottom: 4px;
+            margin: 18px 0 10px 0;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 10.8pt;
+            color: #0f3a62;
+            margin: 12px 0 6px 0;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin-bottom: 8px;
+        }
+
+        ul, ol {
+            margin: 6px 0 10px 20px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 8.8pt;
+            background: #f1f5f9;
+            color: #0a2540;
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
+        pre {
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 8.3pt;
+            line-height: 1.42;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border-left: 3px solid #0ea5e9;
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin: 8px 0 12px 0;
+            break-inside: avoid;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0 12px 0;
+            font-size: 9pt;
+            break-inside: avoid;
+        }
+
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 6px 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #e0f2fe;
+            color: #0a2540;
+            font-weight: 700;
+        }
+
+        .card {
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            padding: 11px 14px;
+            margin-bottom: 11px;
+            background-color: #f8fafc;
+            break-inside: avoid;
+        }
+
+        .qa-card {
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #0284c7;
+            border-radius: 6px;
+            padding: 11px 14px;
+            margin-bottom: 12px;
+            background-color: #ffffff;
+            break-inside: avoid;
+        }
+
+        .qa-title {
+            font-size: 10.6pt;
+            font-weight: 700;
+            color: #0a2540;
+            margin-bottom: 6px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-family: Consolas, monospace;
+            font-size: 8pt;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 4px;
+            color: #ffffff;
+        }
+
+        .b-post { background: #16a34a; }
+        .b-get  { background: #0284c7; }
+        .b-put  { background: #d97706; }
+        .b-del  { background: #dc2626; }
+
+        .arch-box {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-family: Consolas, monospace;
+            font-size: 8.6pt;
+            color: #0a2540;
+            white-space: pre-wrap;
+            margin: 8px 0 12px 0;
+            break-inside: avoid;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="doc-header">
+        <h1>Documentação Técnica &amp; Apresentação Individual — Hangar Embraer</h1>
+        <div class="sub">Integração Frontend e Backend Java Spring Boot (Avaliação do 4º Bimestre — LPVI Java 2)</div>
+        <div class="meta-strip">
+            <span><strong>Projeto:</strong> cadastro-aviao (com.embraer.cadastro_aviao)</span>
+            <span><strong>Banco:</strong> PostgreSQL (:5432/cadastro_aviao)</span>
+            <span><strong>API Base:</strong> http://localhost:8081/aviao</span>
+        </div>
+    </header>
+
+    <h2>1. Visão Geral da Arquitetura e Entidade Aviao</h2>
+    <p>
+        O sistema integra um backend REST desenvolvido em <strong>Java 25 + Spring Boot 4.1.1 + Spring Data JPA</strong>
+        com um frontend web construído em <strong>HTML5, CSS3 e JavaScript puro (Fetch API)</strong>, servido diretamente
+        pelo Spring Boot através da pasta <code>src/main/resources/static/</code>.
+    </p>
+
+    <div class="arch-box">Frontend (index.html + style.css + script.js)
+   │  Requisições HTTP via Fetch API (JSON / Query Params)
+   ▼
+Controller (AviaoController.java — @RestController, @RequestMapping("/aviao"), @CrossOrigin("*"))
+   │  Orquestração das regras e validações
+   ▼
+Service (AviaoService.java — @Service)
+   │  Operações JPA (saveAndFlush, findByNome, findAll, findById, deleteByNome)
+   ▼
+Repository &amp; Entity (AviaoRepository.java / Aviao.java — @Table(name = "aviao"))
+   │  SQL via Hibernate
+   ▼
+PostgreSQL (jdbc:postgresql://localhost:5432/cadastro_aviao)</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Atributo (Aviao.java)</th>
+                <th>Tipo Java</th>
+                <th>Descrição</th>
+                <th>Uso nos Endpoints</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><code>id</code></td><td><code>Integer</code></td><td>Chave primária gerada automaticamente</td><td>Enviado via <code>?id=</code> no <code>PUT</code></td></tr>
+            <tr><td><code>nome</code></td><td><code>String</code></td><td>Nome/prefixo da aeronave (ex: E195-E2)</td><td>Corpo JSON (<code>POST</code>/<code>PUT</code>) e <code>?nome=</code> no <code>GET</code>/<code>DELETE</code></td></tr>
+            <tr><td><code>modelo</code></td><td><code>String</code></td><td>Categoria/modelo (ex: Jato Comercial)</td><td>Corpo JSON no <code>POST</code> e <code>PUT</code></td></tr>
+            <tr><td><code>fabricante</code></td><td><code>String</code></td><td>Fabricante (ex: Embraer)</td><td>Corpo JSON no <code>POST</code> e <code>PUT</code></td></tr>
+            <tr><td><code>autonomia</code></td><td><code>Integer</code></td><td>Alcance de voo em quilômetros</td><td>Corpo JSON no <code>POST</code> e <code>PUT</code></td></tr>
+            <tr><td><code>capacidade</code></td><td><code>Integer</code></td><td>Quantidade máxima de passageiros</td><td>Corpo JSON no <code>POST</code> e <code>PUT</code></td></tr>
+        </tbody>
+    </table>
+
+    <h2>2. O Que Foi Feito em Cada Alteração (Parte por Parte do Código)</h2>
+
+    <div class="card">
+        <h3>2.1. Backend — <code>AviaoService.java</code></h3>
+        <p><strong>Arquivo:</strong> <code>src/main/java/com/embraer/cadastro_aviao/business/AviaoService.java</code></p>
+        <ul>
+            <li>Adicionado <code>import java.util.List;</code>.</li>
+            <li>Criado o método <code>listarTodos()</code> que chama <code>repository.findAll()</code> (herdado de <code>JpaRepository</code>).</li>
+            <li><strong>Motivo:</strong> Permitir ao frontend exibir a tabela completa da frota no hangar, facilitando visualizar o <code>id</code> (necessário para <code>PUT</code>) e o <code>nome</code> (necessário para <code>GET</code> e <code>DELETE</code>).</li>
+            <li><strong>Preservação:</strong> Todos os métodos originais (<code>salvarAviao</code>, <code>buscarAviaoPorNome</code>, <code>deletarAviaoPorNome</code> e <code>atualizarAviaoPorId</code>) foram mantidos intactos.</li>
+        </ul>
+<pre>public List&lt;Aviao&gt; listarTodos(){
+    return repository.findAll();
+}</pre>
+    </div>
+
+    <div class="card">
+        <h3>2.2. Backend — <code>AviaoController.java</code></h3>
+        <p><strong>Arquivo:</strong> <code>src/main/java/com/embraer/cadastro_aviao/controller/AviaoController.java</code></p>
+        <ul>
+            <li>Adicionado <code>import java.util.List;</code>.</li>
+            <li>Adicionada a anotação <code>@CrossOrigin(origins = "*")</code> na classe para liberar chamadas CORS caso o frontend seja aberto pelo Live Server, arquivo local ou outra porta.</li>
+            <li>Criado o endpoint <code>@GetMapping("/todos")</code> retornando <code>ResponseEntity.ok(aviaoService.listarTodos())</code>.</li>
+            <li><strong>Preservação:</strong> Os 4 endpoints originais (<code>@PostMapping</code>, <code>@GetMapping</code>, <code>@DeleteMapping</code> e <code>@PutMapping</code>) permaneceram sem alteração em seus contratos.</li>
+        </ul>
+<pre>@RestController
+@RequestMapping("/aviao")
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
+public class AviaoController {
+    ...
+    @GetMapping("/todos")
+    public ResponseEntity&lt;List&lt;Aviao&gt;&gt; listarTodos(){
+        return ResponseEntity.ok(aviaoService.listarTodos());
+    }
+}</pre>
+    </div>
+
+    <div class="card">
+        <h3>2.3. Frontend — Estrutura e Interface (<code>index.html</code> e <code>style.css</code>)</h3>
+        <p><strong>Arquivos:</strong> <code>src/main/resources/static/index.html</code> e <code>style.css</code></p>
+        <ul>
+            <li><strong>Cabeçalho Temático (Hangar Embraer):</strong> Paleta aeronáutica (azul-marinho <code>#0a2540</code>, azul-céu <code>#0284c7</code>, branco gelo <code>#f1f5f9</code>), ícone vetorial de aeronave e indicador em tempo real de disponibilidade da API na porta <code>8081</code>.</li>
+            <li><strong>Formulário de Cadastro e Atualização (<code>#aviaoForm</code>):</strong> Campos alinhados à entidade <code>Aviao</code> (<code>id</code> para <code>PUT</code>, <code>nome</code>, <code>modelo</code>, <code>fabricante</code>, <code>autonomia</code>, <code>capacidade</code>) e botões identificados por badges coloridos para <code>POST</code> e <code>PUT</code>.</li>
+            <li><strong>Painel de Consulta e Remoção por Nome:</strong> Campo <code>#buscaNome</code> com botões <code>GET</code> e <code>DELETE</code>, além do card de ficha técnica (<code>#resultadoBusca</code>) com botão para carregar os dados no formulário.</li>
+            <li><strong>Tabela da Frota (<code>#tabelaFrotaBody</code>):</strong> Lista todos os aviões retornados por <code>GET /aviao/todos</code>, com contador e botões de ação rápida (<em>Editar</em> e <em>Excluir</em>).</li>
+            <li><strong>Monitor HTTP Didático:</strong> Painel escuro na parte inferior que mostra ao vivo o verbo HTTP, URL completa, status retornado, JSON enviado e corpo da resposta.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>2.4. Frontend — Lógica, Integração e Segurança (<code>script.js</code>)</h3>
+        <p><strong>Arquivo:</strong> <code>src/main/resources/static/script.js</code></p>
+        <ul>
+            <li><strong>Configuração Centralizada:</strong> <code>const API_URL = "http://localhost:8081/aviao";</code>.</li>
+            <li><strong>Funções CRUD Assíncronas:</strong> <code>salvarAviao()</code> (<code>POST</code>), <code>atualizarAviaoPorId()</code> (<code>PUT</code>), <code>buscarAviaoPorNome()</code> (<code>GET</code>), <code>deletarAviaoPorNome()</code> (<code>DELETE</code>) e <code>carregarFrota()</code> (<code>GET /todos</code>).</li>
+            <li><strong>Validação de Dados:</strong> <code>obterDadosFormulario()</code> garante preenchimento dos campos obrigatórios no <code>POST</code> e exige inteiros positivos para <code>autonomia</code>, <code>capacidade</code> e <code>id</code> (no <code>PUT</code>).</li>
+            <li><strong>Segurança na URL e no DOM:</strong> Uso de <code>encodeURIComponent()</code> nas query strings (<code>?nome=</code> e <code>?id=</code>) e renderização via <code>document.createElement()</code> + <code>.textContent</code> (prevenção contra ataques XSS, sem uso de <code>innerHTML</code> com dados externos).</li>
+            <li><strong>Confirmação de Exclusão:</strong> Solicita confirmação via <code>window.confirm()</code> antes de enviar o <code>DELETE</code>.</li>
+        </ul>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2>3. Respostas às Perguntas da Apresentação Individual</h2>
+
+    <div class="qa-card">
+        <div class="qa-title">1. Como o frontend realiza uma requisição HTTP ao backend?</div>
+        <p>
+            O frontend realiza as requisições utilizando a <strong>Fetch API</strong> nativa do navegador (<code>fetch(url, options)</code>) dentro de funções JavaScript assíncronas (<code>async</code> / <code>await</code>) no arquivo <code>script.js</code>.
+        </p>
+        <p>
+            A URL base do backend é definida em <code>const API_URL = "http://localhost:8081/aviao";</code>. Quando o usuário interage com um botão da interface (por exemplo, <em>Cadastrar Aeronave</em> ou <em>Buscar por Nome</em>), o evento dispara a função correspondente, que monta as configurações da requisição (verbo HTTP, cabeçalhos e corpo quando necessário) e executa <code>await fetch(...)</code> contra o servidor Spring Boot na porta <code>8081</code>, tratando erros de rede e de status HTTP com <code>try / catch</code>.
+        </p>
+    </div>
+
+    <div class="qa-card">
+        <div class="qa-title">2. Como são utilizados os verbos HTTP (GET, POST, PUT, DELETE) implementados no projeto?</div>
+        <ul>
+            <li><span class="badge b-post">POST</span> <code>POST /aviao</code> (<strong>Criar</strong>): Enviado por <code>salvarAviao()</code> com os dados do novo avião em JSON para salvar um registro inédito no PostgreSQL.</li>
+            <li><span class="badge b-get">GET</span> <code>GET /aviao?nome={nome}</code> e <code>GET /aviao/todos</code> (<strong>Consultar</strong>): Enviado por <code>buscarAviaoPorNome()</code> para buscar uma aeronave específica e por <code>carregarFrota()</code> para listar toda a frota cadastrada.</li>
+            <li><span class="badge b-put">PUT</span> <code>PUT /aviao?id={id}</code> (<strong>Atualizar</strong>): Enviado por <code>atualizarAviaoPorId()</code> informando o <code>id</code> na URL e os campos atualizados em JSON no corpo da requisição.</li>
+            <li><span class="badge b-del">DELETE</span> <code>DELETE /aviao?nome={nome}</code> (<strong>Remover</strong>): Enviado por <code>deletarAviaoPorNome()</code>, após confirmação do usuário, passando o nome exato da aeronave na URL para remoção no banco.</li>
+        </ul>
+    </div>
+
+    <div class="qa-card">
+        <div class="qa-title">3. Como os dados são enviados do frontend para o backend?</div>
+        <p>Os dados são enviados de duas maneiras, conforme o contrato definido em <code>AviaoController.java</code>:</p>
+        <ol>
+            <li><strong>Corpo da Requisição em JSON (<code>@RequestBody</code> — <code>POST</code> e <code>PUT</code>):</strong> O JavaScript reúne os valores do formulário em um objeto, converte em string JSON com <code>JSON.stringify(dadosAviao)</code> e envia o cabeçalho <code>"Content-Type": "application/json"</code> para que o Spring/Jackson desserialize o JSON para a classe <code>Aviao</code>.</li>
+            <li><strong>Parâmetros na URL / Query String (<code>@RequestParam</code> — <code>GET</code>, <code>DELETE</code> e <code>id</code> do <code>PUT</code>):</strong> Os valores são concatenados após <code>?</code> usando <code>encodeURIComponent()</code> (ex.: <code>http://localhost:8081/aviao?nome=E195-E2</code> ou <code>http://localhost:8081/aviao?id=1</code>), sendo capturados pelo Spring via <code>@RequestParam</code>.</li>
+        </ol>
+    </div>
+
+    <div class="qa-card">
+        <div class="qa-title">4. Como o backend processa a requisição e retorna uma resposta?</div>
+        <ol>
+            <li><strong>Recepção (<code>AviaoController</code>):</strong> O Spring Web mapeia a rota <code>/aviao</code> e o verbo HTTP, valida a origem via <code>@CrossOrigin(origins = "*")</code> e extrai o <code>@RequestBody</code> / <code>@RequestParam</code>.</li>
+            <li><strong>Lógica de Negócio (<code>AviaoService</code>):</strong> O controller delega ao serviço. No <code>PUT</code>, o serviço busca o registro por ID e mescla campos novos e antigos via <code>Aviao.builder()</code>; no <code>GET</code> por nome, busca no repositório e lança exceção caso não encontre.</li>
+            <li><strong>Persistência (<code>AviaoRepository</code> + PostgreSQL):</strong> O Spring Data JPA executa o SQL correspondente (<code>INSERT</code>, <code>SELECT</code>, <code>UPDATE</code> ou <code>DELETE</code>) no banco <code>cadastro_aviao</code>.</li>
+            <li><strong>Retorno HTTP (<code>ResponseEntity</code>):</strong> <code>POST</code>, <code>PUT</code> e <code>DELETE</code> devolvem <code>ResponseEntity.ok().build()</code> (status <code>200 OK</code> sem corpo). Os métodos <code>GET</code> devolvem <code>ResponseEntity.ok(...)</code> contendo o objeto <code>Aviao</code> ou <code>List&lt;Aviao&gt;</code> serializado em JSON pelo Jackson.</li>
+        </ol>
+    </div>
+
+    <div class="qa-card">
+        <div class="qa-title">5. Como o frontend recebe e apresenta os dados retornados pelo backend?</div>
+        <p>
+            Após receber o objeto <code>response</code> do <code>fetch</code>, o <code>script.js</code> verifica <code>if (!response.ok)</code>. Se houver erro HTTP, exibe uma mensagem clara no banner superior e registra o detalhe no Monitor HTTP.
+        </p>
+        <p>
+            Em caso de sucesso: nos métodos <code>GET</code>, chama <code>await response.json()</code> para transformar o JSON em objetos JavaScript; nos métodos <code>POST</code>, <code>PUT</code> e <code>DELETE</code>, confirma o status <code>200 OK</code> e dispara <code>await carregarFrota(false)</code> para recarregar a tabela. Todos os valores exibidos na ficha técnica (<code>exibirResultadoBusca</code>) e na tabela (<code>renderizarTabelaFrota</code>) são inseridos com segurança usando <code>document.createElement()</code> e <code>.textContent</code>.
+        </p>
+    </div>
+
+    <div class="qa-card">
+        <div class="qa-title">6. Como o prompt elaborado orientou a IA na geração da interface?</div>
+        <p>
+            O prompt forneceu uma especificação técnica fechada baseada no código real do backend: listou os atributos exatos da classe <code>Aviao</code>, a URL e a porta (<code>8081</code>), o formato esperado de cada endpoint (<code>@RequestBody</code> vs <code>@RequestParam</code>), a inclusão controlada de <code>@CrossOrigin(origins = "*")</code> e <code>GET /aviao/todos</code>, o layout em 4 blocos com temática de aviação (incluindo o Monitor HTTP para demonstração em sala) e regras rígidas de segurança no JavaScript (validação de inputs, <code>encodeURIComponent</code> e prevenção de XSS sem <code>innerHTML</code>).
+        </p>
+    </div>
+
+    <h2>4. Prompt Refinado Utilizado (Pronto para Entrega)</h2>
+    <pre>Atue como um desenvolvedor Full-Stack sênior especialista em Java Spring Boot e Frontend Web (HTML5, CSS3 e JavaScript puro).
+
+Tenho um backend REST em Java (Spring Boot) rodando na porta 8081 com banco PostgreSQL, cuja entidade Aviao (tabela "aviao") possui exatamente os seguintes campos JSON:
+- id (Integer, gerado automaticamente pelo banco)
+- nome (String)
+- modelo (String)
+- fabricante (String)
+- autonomia (Integer, em km)
+- capacidade (Integer, número de passageiros)
+
+Atualmente o AviaoController (@RequestMapping("/aviao")) possui estes endpoints:
+1. POST /aviao -&gt; recebe @RequestBody Aviao (JSON) e retorna 200 OK sem corpo (Void).
+2. GET /aviao?nome={nome} -&gt; recebe @RequestParam String nome e retorna 200 OK com o objeto Aviao em JSON.
+3. PUT /aviao?id={id} -&gt; recebe @RequestParam Integer id na URL e @RequestBody Aviao (JSON) no corpo, retornando 200 OK sem corpo (Void).
+4. DELETE /aviao?nome={nome} -&gt; recebe @RequestParam String nome na URL e retorna 200 OK sem corpo (Void).
+
+Quero que você orquestre a integração completa entre backend e frontend seguindo estas instruções:
+
+1. Ajustes mínimos e seguros no Backend:
+   - Adicione @CrossOrigin(origins = "*") no AviaoController para evitar bloqueios de CORS no navegador.
+   - Adicione apenas um método listarTodos() no AviaoService (usando repository.findAll()) e um endpoint @GetMapping("/todos") no AviaoController retornando ResponseEntity&lt;List&lt;Aviao&gt;&gt;, para que o frontend consiga listar todas as aeronaves cadastradas sem alterar nenhum dos 4 endpoints existentes.
+
+2. Criação do Frontend na pasta src/main/resources/static/ (index.html, style.css e script.js):
+   - Use apenas HTML5, CSS3 e JavaScript Vanilla com Fetch API (async/await), sem frameworks externos.
+   - Crie um visual simples, objetivo, responsivo e agradável com tema aeronáutico inspirado na Embraer (tons de azul-marinho aeronáutico, azul-céu e branco gelo), com badges identificando os verbos HTTP (POST, GET, PUT, DELETE) e indicador de status de conexão com o backend.
+   - Organize a interface em 4 blocos claros:
+     a) Formulário de Cadastro e Atualização: campos para id (com aviso de uso exclusivo no PUT), nome, modelo, fabricante, autonomia e capacidade; botões "Cadastrar Aeronave (POST)", "Atualizar por ID (PUT)" e "Limpar".
+     b) Consulta e Exclusão por Nome: campo para digitar o nome exato da aeronave com botões "Buscar por Nome (GET)" e "Deletar por Nome (DELETE)", além de um card de ficha técnica para exibir o avião retornado pelo GET e um botão para carregá-lo no formulário de edição.
+     c) Tabela da Frota no Hangar (GET /aviao/todos): exibe todas as aeronaves cadastradas com contador total e botões de ação rápida "Editar" (preenche o formulário para PUT) e "Excluir" (chama DELETE por nome com confirmação).
+     d) Monitor HTTP Didático: painel mostrando o último verbo HTTP utilizado, a URL completa requisitada, o código de status HTTP retornado, o JSON enviado no Request Body e a resposta recebida do servidor, facilitando a demonstração ao vivo do funcionamento da integração.
+
+3. Requisitos de Segurança e Robustez no script.js:
+   - Defina API_URL = "http://localhost:8081/aviao".
+   - Valide os campos antes do envio (campos obrigatórios no POST, inteiros positivos para autonomia, capacidade e id no PUT).
+   - Use encodeURIComponent() em todos os parâmetros enviados via Query String (?nome= e ?id=).
+   - Previna vulnerabilidades XSS renderizando todos os dados recebidos do backend via document.createElement() e textContent (nunca injete dados externos com innerHTML).
+   - Trate erros HTTP verificando response.ok e capture falhas de rede com try/catch, exibindo feedback claro ao usuário.
+   - Atualize automaticamente a tabela da frota após operações de POST, PUT e DELETE bem-sucedidas.</pre>
+
+</body>
+</html>

@@ -5,6 +5,8 @@ import com.embraer.cadastro_aviao.infrastructure.entitys.Aviao;
 import com.embraer.cadastro_aviao.infrastructure.repository.AviaoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AviaoService {
     private final AviaoRepository repository;
@@ -21,6 +23,10 @@ public class AviaoService {
         return repository.findByNome(nome).orElseThrow(
                 () -> new RuntimeException("Nome não encontrado")
         );
+    }
+
+    public List<Aviao> listarTodos(){
+        return repository.findAll();
     }
 
     public void deletarAviaoPorNome(String nome){

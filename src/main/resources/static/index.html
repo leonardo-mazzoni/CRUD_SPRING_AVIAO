@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangar Embraer — Controle de Frota de Aeronaves</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="container topbar-content">
+            <div class="brand">
+                <div class="brand-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1>Hangar Embraer</h1>
+                    <p class="subtitle">Torre de Controle &amp; Gestão de Frota de Aeronaves</p>
+                </div>
+            </div>
+            <div class="api-status" id="apiStatus" aria-live="polite">
+                <span class="status-dot" id="apiStatusDot"></span>
+                <span id="apiStatusText">Conectando à API...</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        <div id="feedbackBanner" class="feedback-banner hidden" role="alert" aria-live="assertive"></div>
+
+        <div class="dashboard-grid">
+            <!-- Seção 1: Formulário de Cadastro (POST) e Atualização (PUT) -->
+            <section class="card" aria-labelledby="formTitle">
+                <div class="card-header">
+                    <div>
+                        <h2 id="formTitle">Cadastro e Atualização de Aeronave</h2>
+                        <p class="card-desc">Envio de dados em JSON via <code>POST /aviao</code> ou <code>PUT /aviao?id={id}</code></p>
+                    </div>
+                </div>
+
+                <form id="aviaoForm" novalidate>
+                    <div class="form-row two-cols">
+                        <div class="form-group">
+                            <label for="aviaoId">
+                                ID da Aeronave
+                                <span class="hint-tag">Somente para PUT</span>
+                            </label>
+                            <input type="number" id="aviaoId" name="id" min="1" placeholder="Ex: 1 (para atualizar)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aviaoNome">Nome / Prefixo *</label>
+                            <input type="text" id="aviaoNome" name="nome" maxlength="100" placeholder="Ex: E195-E2" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row two-cols">
+                        <div class="form-group">
+                            <label for="aviaoModelo">Modelo *</label>
+                            <input type="text" id="aviaoModelo" name="modelo" maxlength="100" placeholder="Ex: Jato Comercial" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aviaoFabricante">Fabricante *</label>
+                            <input type="text" id="aviaoFabricante" name="fabricante" maxlength="100" placeholder="Ex: Embraer" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row two-cols">
+                        <div class="form-group">
+                            <label for="aviaoAutonomia">Autonomia (km) *</label>
+                            <input type="number" id="aviaoAutonomia" name="autonomia" min="1" placeholder="Ex: 4815" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aviaoCapacidade">Capacidade (Passageiros) *</label>
+                            <input type="number" id="aviaoCapacidade" name="capacidade" min="1" placeholder="Ex: 146" required>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" id="btnCadastrar" class="btn btn-primary">
+                            <span class="http-badge badge-post">POST</span>
+                            Cadastrar Aeronave
+                        </button>
+                        <button type="button" id="btnAtualizar" class="btn btn-warning">
+                            <span class="http-badge badge-put">PUT</span>
+                            Atualizar por ID
+                        </button>
+                        <button type="button" id="btnLimpar" class="btn btn-ghost">
+                            Limpar
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Seção 2: Consulta e Exclusão por Nome (GET / DELETE) -->
+            <section class="card" aria-labelledby="searchTitle">
+                <div class="card-header">
+                    <div>
+                        <h2 id="searchTitle">Consulta &amp; Remoção por Nome</h2>
+                        <p class="card-desc">Parâmetros via Query String em <code>GET /aviao?nome=</code> e <code>DELETE /aviao?nome=</code></p>
+                    </div>
+                </div>
+
+                <div class="search-box">
+                    <div class="form-group">
+                        <label for="buscaNome">Nome exato da Aeronave</label>
+                        <input type="text" id="buscaNome" placeholder="Digite o nome para buscar ou remover (ex: E195-E2)">
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" id="btnBuscar" class="btn btn-info">
+                            <span class="http-badge badge-get">GET</span>
+                            Buscar por Nome
+                        </button>
+                        <button type="button" id="btnDeletar" class="btn btn-danger">
+                            <span class="http-badge badge-delete">DELETE</span>
+                            Deletar por Nome
+                        </button>
+                    </div>
+                </div>
+
+                <div id="resultadoBusca" class="search-result hidden" aria-live="polite">
+                    <div class="result-header">
+                        <span class="result-badge">Ficha da Aeronave</span>
+                        <span class="result-id" id="resId">ID: -</span>
+                    </div>
+                    <dl class="specs-grid">
+                        <div class="spec-item">
+                            <dt>Nome</dt>
+                            <dd id="resNome">-</dd>
+                        </div>
+                        <div class="spec-item">
+                            <dt>Modelo</dt>
+                            <dd id="resModelo">-</dd>
+                        </div>
+                        <div class="spec-item">
+                            <dt>Fabricante</dt>
+                            <dd id="resFabricante">-</dd>
+                        </div>
+                        <div class="spec-item">
+                            <dt>Autonomia</dt>
+                            <dd id="resAutonomia">-</dd>
+                        </div>
+                        <div class="spec-item">
+                            <dt>Capacidade</dt>
+                            <dd id="resCapacidade">-</dd>
+                        </div>
+                    </dl>
+                    <div class="result-actions">
+                        <button type="button" id="btnCarregarParaEdicao" class="btn btn-sm btn-outline">
+                            Carregar no Formulário (PUT)
+                        </button>
+                    </div>
+                </div>
+
+                <div id="resultadoBuscaVazio" class="empty-search">
+                    <p>Informe o nome exato de uma aeronave cadastrada para visualizar sua ficha técnica ou removê-la da frota.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Seção 3: Tabela Completa da Frota (GET /aviao/todos) -->
+        <section class="card table-section" aria-labelledby="fleetTitle">
+            <div class="card-header table-header">
+                <div>
+                    <h2 id="fleetTitle">Frota Registrada no Hangar</h2>
+                    <p class="card-desc">Listagem sincronizada via <code>GET /aviao/todos</code> — clique em Editar para preencher o formulário</p>
+                </div>
+                <div class="table-controls">
+                    <span class="fleet-counter" id="fleetCounter">0 aeronaves</span>
+                    <button type="button" id="btnAtualizarLista" class="btn btn-outline btn-sm">
+                        <span class="http-badge badge-get">GET</span>
+                        Atualizar Lista
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="fleet-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Modelo</th>
+                            <th>Fabricante</th>
+                            <th>Autonomia (km)</th>
+                            <th>Capacidade</th>
+                            <th class="actions-col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaFrotaBody">
+                        <tr>
+                            <td colspan="7" class="empty-row">Carregando frota do hangar...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Seção 4: Monitor HTTP Didático -->
+        <section class="card monitor-section" aria-labelledby="monitorTitle">
+            <div class="card-header">
+                <div>
+                    <h2 id="monitorTitle">Monitor de Comunicação HTTP (Frontend &harr; Backend)</h2>
+                    <p class="card-desc">Inspecione em tempo real os verbos HTTP, endpoints, JSON enviado e resposta do servidor Java</p>
+                </div>
+            </div>
+
+            <div class="monitor-grid">
+                <div class="monitor-meta">
+                    <div class="meta-box">
+                        <span class="meta-label">Verbo HTTP</span>
+                        <span id="monMethod" class="http-badge badge-get">-</span>
+                    </div>
+                    <div class="meta-box meta-url">
+                        <span class="meta-label">Endpoint / URL</span>
+                        <code id="monUrl">Aguardando requisição...</code>
+                    </div>
+                    <div class="meta-box">
+                        <span class="meta-label">Status HTTP</span>
+                        <span id="monStatus" class="status-code">-</span>
+                    </div>
+                </div>
+
+                <div class="monitor-payloads">
+                    <div class="payload-box">
+                        <span class="meta-label">Corpo Enviado (Request Body JSON)</span>
+                        <pre id="monReqBody">Nenhum corpo enviado</pre>
+                    </div>
+                    <div class="payload-box">
+                        <span class="meta-label">Resposta Recebida (Response Body)</span>
+                        <pre id="monResBody">Aguardando resposta...</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>CRUD Spring Boot &amp; PostgreSQL — Gestão de Aeronaves | API Base: <code>http://localhost:8081/aviao</code></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
